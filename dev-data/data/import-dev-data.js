@@ -22,10 +22,10 @@ const importData = async () => {
     try {
         await Tour.create(tours);
         console.log('Data seeded successfully...');
-
     } catch (error) {
         console.log(error)
     }
+    process.exit();
 }
 
 // DELETE DATA FROM DATABASE
@@ -33,17 +33,17 @@ const deleteData = async () => {
     try {
         await Tour.deleteMany();
         console.log('Data deleted successfully...');
-
     } catch (error) {
         console.log(error)
     }
+    process.exit();
 }
 
 console.log(process.argv);
 
-if(process.argv[2] === '--import'){
+if (process.argv[2] === '--import') {
     importData();
 }
-else if(process.argv[2] === '--delete'){
+else if (process.argv[2] === '--delete') {
     deleteData();
 }
