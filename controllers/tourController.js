@@ -6,24 +6,26 @@ const Tour = require('./../models/tourModel');
 exports.getAllTours = async (req, res) => {
     try {
         // build the query (filtering)
-        const queryObj = { ...req.query };
+        const queryObj = { ...req.query }; // 
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
         excludedFields.forEach(el => delete queryObj[el]);
-        // console.log(req.query, queryObj);
+        // console.log(queryObj);
 
         // advanced filtering
-        const queryStr = JSON.stringify(queryObj);
-        queryStr.replace('/\b(gte|gt|lte|lt)\b/g', match => `$${match}`);
-        console.log(queryStr);
+        let queryStr = JSON.stringify(queryObj);
+        //build the queryStr and replace to put the '$' before them.
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+        queryStr = JSON.parse(queryStr);
+        // console.log(JSON.parse(queryStr));
 
         // use without calling "await, so it can return a queryable object"
-        const query = Tour.find(queryObj);
+        const query = Tour.find(queryStr);
 
         // const query = Tour.find()
         //     .where('duration').equals(5)
         //     .where('difficulty').equals('easy');
 
-        // { difficulty: 'easy', duration: { $gte: 5 } }
+        // const tours = await Tour.find({ difficulty: 'easy', duration: { $gte: 5 } });
         // (greater than or equal => 'gte')
         // (greater than => 'gt')
         // (less than or equal => 'lte' )
