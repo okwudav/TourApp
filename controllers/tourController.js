@@ -5,21 +5,22 @@ const Tour = require('./../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
     try {
-        // build the query (filtering)
+        // BUILDING THE QUERY (filtering)
         const queryObj = { ...req.query }; // 
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        excludedFields.forEach(el => delete queryObj[el]);
-        // console.log(queryObj);
+        excludedFields.forEach(el => delete queryObj[el]); 
 
-        // advanced filtering
+        // ADVANCED FILTERING
         let queryStr = JSON.stringify(queryObj);
         //build the queryStr and replace to put the '$' before them.
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-        queryStr = JSON.parse(queryStr);
-        // console.log(JSON.parse(queryStr));
+        queryStr = JSON.parse(queryStr); 
 
         // use without calling "await, so it can return a queryable object"
         const query = Tour.find(queryStr);
+
+        // SORTING Feature
+
 
         // const query = Tour.find()
         //     .where('duration').equals(5)
