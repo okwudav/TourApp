@@ -1,18 +1,27 @@
 const express = require('express');
-const { getAllTours, createTour, getTour, updateTour, deleteTour } = require('./../controllers/tourController');
+const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
 // confirm ID in middleware before hitting the router
 // router.param('id', checkID);
 
+router.route('/get-top-5-tours')
+    .get(tourController.aliasTopTours, tourController.getAllTours);
+
+router.route('/tour-stats')
+    .get(tourController.getTourStats);
+
+router.route('/monthly-plan/:year')
+    .get(tourController.getMonthlyPlan);
+
 router.route('/')
-    .get(getAllTours)
-    .post(createTour);
+    .get(tourController.getAllTours)
+    .post(tourController.createTour);
 
 router.route('/:id')
-    .get(getTour)
-    .patch(updateTour)
-    .delete(deleteTour);
+    .get(tourController.getTour)
+    .patch(tourController.updateTour)
+    .delete(tourController.deleteTour);
 
 module.exports = router;
