@@ -53,7 +53,11 @@ const tourSchema = mongoose.Schema(
             default: Date.now(),
             select: false
         },
-        startDates: [Date]
+        startDates: [Date],
+        secretTour: {
+            type: Boolean,
+            default: false
+        }
     },
 
     // pass shema options
@@ -76,11 +80,23 @@ tourSchema.virtual('slug').get(function () {
 });
 
 // DOCUMENT MIDDLE WARE runs before a save or create occurs in the database
+// also known as Pre Save Hooks
 // tourSchema.pre('save', function (next) {
 //     this.slug = slugify(this.name, { lower: true });
 //     next();
 // });
 
+// AFTER SAVING A DOCUMENT, doc returns the current saved document
+// tourSchema.post('save', function (doc, next) {
+//     console.log(doc);
+//     next();
+// });
+
+// QUERY MIDDLEWARES
+tourSchema.pre('find', function (next) {
+    this.find({ secretTour: { $ne: true } });
+    next();
+});
 
 
 const Tour = mongoose.model('Tour', tourSchema);
