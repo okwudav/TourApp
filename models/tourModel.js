@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = mongoose.Schema(
     {
@@ -59,14 +60,28 @@ const tourSchema = mongoose.Schema(
     {
         // when ever it return a JSON, also pass along the virtual properties
         toJSON: { virtuals: true },
-        toObject: { virtuals: true}
+        toObject: { virtuals: true }
     }
 );
- 
+
+// VIRTUAL PROPERTY
 tourSchema.virtual('durationWeeks').get(function () {
     // return the duration per week
-    return this.duration / 7; 
+    return this.duration / 7;
 });
+
+tourSchema.virtual('slug').get(function () {
+    // return slugged name property
+    return slugify(this.name, { lower: true });
+});
+
+// DOCUMENT MIDDLE WARE runs before a save or create occurs in the database
+// tourSchema.pre('save', function (next) {
+//     this.slug = slugify(this.name, { lower: true });
+//     next();
+// });
+
+
 
 const Tour = mongoose.model('Tour', tourSchema);
 
