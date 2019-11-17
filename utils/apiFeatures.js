@@ -1,27 +1,28 @@
 class ApiFeatures {
-    constructor(query, queryString){
+    constructor(query, queryString) {
         this.query = query;
         this.queryString = queryString;
     }
 
-    filter(){
+    filter() {
         // console.log(this.queryString);
-         // BUILDING THE QUERY (filtering)
-         const queryObj = { ...this.queryString }; // 
-         const excludedFields = ['page', 'sort', 'limit', 'fields'];
-         excludedFields.forEach(el => delete queryObj[el]);
-         
-         // ADVANCED FILTERING
-         let queryStr = JSON.stringify(queryObj);
-         // build the queryStr and replace to put the '$' before them. 
-         // const tours = await Tour.find({ difficulty: 'easy', duration: { $gte: 5 } });
-         // (greater than or equal => 'gte')
-         // (greater than => 'gt')
-         // (less than or equal => 'lte' )
-         // (less than => 'lt')
-         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`); 
- 
-         // use without calling "await, so it can return a queryable object"
+        // BUILDING THE QUERY (filtering)
+//          const queryObj = { ...this.queryString }; 
+        const queryObj = this.queryString;
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        excludedFields.forEach(el => delete queryObj[el]);
+
+        // ADVANCED FILTERING
+        let queryStr = JSON.stringify(queryObj);
+        // build the queryStr and replace to put the '$' before them. 
+        // const tours = await Tour.find({ difficulty: 'easy', duration: { $gte: 5 } });
+        // (greater than or equal => 'gte')
+        // (greater than => 'gt')
+        // (less than or equal => 'lte' )
+        // (less than => 'lt')
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+
+        // use without calling "await, so it can return a queryable object"
         //  let query = Tour.find(queryStr);
         this.query = this.query.find(JSON.parse(queryStr))
 
@@ -29,7 +30,7 @@ class ApiFeatures {
         return this;
     }
 
-    sort(){
+    sort() {
         if (this.queryString.sort) {
             // .sort('price ratingsAverage')
             const sortBy = this.queryString.sort.split(',').join(' ');
@@ -40,11 +41,11 @@ class ApiFeatures {
             // will start from the latest createdAt
             this.query.sort('-createdAt');
         }
-         // retuen this object
-         return this;
+        // retuen this object
+        return this;
     }
 
-    limitFields(){
+    limitFields() {
         if (this.queryString.fields) {
             const fields = this.queryString.fields.split(',').join(' ');
             this.query.select(fields);
@@ -53,19 +54,19 @@ class ApiFeatures {
             // remove the returning '__v' property
             this.query.select('-__v');
         }
-         // retuen this object
-         return this;
+        // retuen this object
+        return this;
     }
 
-    pagination(){
+    pagination() {
         const page = this.queryString.page * 1 || 1;
         const limit = this.queryString.limit * 1 || 100;
         const skip = (page - 1) * limit;
 
-        this.query = this.query.skip(skip).limit(limit); 
+        this.query = this.query.skip(skip).limit(limit);
 
-         // retuen this object
-         return this;
+        // retuen this object
+        return this;
     }
 }
 
