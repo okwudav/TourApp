@@ -20,4 +20,4 @@ mongoose.connect(process.env.DB_LOCAL, {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Listening from port ${port}...`);
-});
+}); 

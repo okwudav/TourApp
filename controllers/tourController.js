@@ -12,13 +12,13 @@ exports.aliasTopTours = (req, res, next) => {
 }
 
 exports.getAllTours = async (req, res) => {
-    try {  
+    try {
         // pass the query and the queryString
         const features = new ApiFeatures(Tour.find(), req.query)
-                .filter()
-                .sort()
-                .limitFields()
-                .pagination();
+            .filter()
+            .sort()
+            .limitFields()
+            .pagination();
 
         const tours = await features.query;
 
@@ -131,36 +131,36 @@ exports.deleteTour = async (req, res) => {
 exports.getTourStats = async (req, res) => {
     try {
 
-         const stats = await Tour.aggregate([
-             {
-                 // match ratingsAverage column to value greater than or equal 4.5 
-                 $match: { ratingsAverage: { $gte: 4.5 } }
-             }, {
-                 // group tour datas, _id is compulsory which determines what is been grouped with
-                 $group: {
-                     _id: { $toUpper: '$difficulty' },
-                     numTours: { $sum: 1 },
-                     numRating: { $sum: '$ratingsQuantity' },
-                     avgRating: { $avg: '$ratingsAverage' },
-                     avgPrice: { $avg: '$price' },
-                     minPrice: { $min: '$price' },
-                     maxPrice: { $max: '$price'}
-                 }
-             }, {
-                 // sort based on the average price grouped property by ASC (1)
-                 $sort: { avgPrice: 1 }
-             } //  {
+        const stats = await Tour.aggregate([
+            {
+                // match ratingsAverage column to value greater than or equal 4.5 
+                $match: { ratingsAverage: { $gte: 4.5 } }
+            }, {
+                // group tour datas, _id is compulsory which determines what is been grouped with
+                $group: {
+                    _id: { $toUpper: '$difficulty' },
+                    numTours: { $sum: 1 },
+                    numRating: { $sum: '$ratingsQuantity' },
+                    avgRating: { $avg: '$ratingsAverage' },
+                    avgPrice: { $avg: '$price' },
+                    minPrice: { $min: '$price' },
+                    maxPrice: { $max: '$price' }
+                }
+            }, {
+                // sort based on the average price grouped property by ASC (1)
+                $sort: { avgPrice: 1 }
+            } //  {
             //      $match: { _id: { $ne: 'EASY'} }
             //  }
-         ]);
-        
-         res.status(200).json({
+        ]);
+
+        res.status(200).json({
             status: 'success',
             data: {
                 stats
             }
         });
-        
+
     } catch (err) {
         res.status(404).json({
             status: 'failed',
@@ -189,7 +189,7 @@ exports.getMonthlyPlan = async (req, res) => {
             }, {
                 // already sorted by year, so group by month in the _id property
                 $group: {
-                    _id: { $month: '$startDates' }, 
+                    _id: { $month: '$startDates' },
                     numToursStarts: { $sum: 1 },
                     // since we have more than 1 tour in a month, so we have to show the names of the tours using $push
                     tours: { $push: '$name' }
@@ -216,7 +216,7 @@ exports.getMonthlyPlan = async (req, res) => {
                 plan
             }
         });
-        
+
     } catch (err) {
         res.status(404).json({
             status: 'failed',

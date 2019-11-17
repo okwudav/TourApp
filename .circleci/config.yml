@@ -7,9 +7,9 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:11.13.0
-      - image: mongo:4.2.0
-
+      # - image: circleci/node:11.13.0
+      - image: circleci/node:7.10
+      # - image: mongo:4.2.0
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -20,9 +20,9 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
+      # - run:
+      #     name: update-npm
+      #     command: 'sudo npm install -g npm@latest'
 
       # Download and cache dependencies
       - restore_cache:
@@ -37,6 +37,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+
       # run tests!
       - run: npm test
 
