@@ -3,7 +3,7 @@ const Tour = require('./../models/tourModel');
 const ApiFeatures = require('./../utils/apiFeatures');
 
 // const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
-
+// adekunleoa@gmail.com 
 exports.aliasTopTours = (req, res, next) => {
     req.query.limit = '5';
     req.query.sort = '-ratingsAverage,price';
