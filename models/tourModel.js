@@ -78,37 +78,37 @@ const tourSchema = mongoose.Schema(
         secretTour: {
             type: Boolean,
             default: false
-        }
-        // startLocation: {
-        //     // GeoJSON
-        //     type: {
-        //       type: String,
-        //       default: 'Point',
-        //       enum: ['Point']
-        //     },
-        //     coordinates: [Number],
-        //     address: String,
-        //     description: String
-        //   },
-        // locations: [
-        //     {
-        //       type: {
-        //         type: String,
-        //         default: 'Point',
-        //         enum: ['Point']
-        //       },
-        //       coordinates: [Number],
-        //       address: String,
-        //       description: String,
-        //       day: Number
-        //     }
-        //   ],
-        //   guides: [
-        //     {
-        //       type: mongoose.Schema.ObjectId,
-        //       ref: 'User'
-        //     }
-        //   ]
+        },
+        startLocation: {
+            // GeoJSON
+            type: {
+                type: String,
+                default: 'Point',
+                enum: ['Point']
+            },
+            coordinates: [Number],
+            address: String,
+            description: String
+        },
+        locations: [
+            {
+                type: {
+                    type: String,
+                    default: 'Point',
+                    enum: ['Point']
+                },
+                coordinates: [Number],
+                address: String,
+                description: String,
+                day: Number
+            }
+        ],
+        guides: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User'
+            }
+        ]
     },
 
     // pass shema options
@@ -125,7 +125,7 @@ tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
 });
 
-tourSchema.virtual('slug').get(function () {
+tourSchema.virtual('nameSlugged').get(function () {
     // return slugged name property
     return slugify(this.name, { lower: true });
 });
