@@ -28,7 +28,7 @@ app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-// ERROR MIDDLEWARE that throws all errors
+// ERROR MIDDLEWAEW to catch all error
 app.use(globalErrorHandler);
 
 module.exports = app;
