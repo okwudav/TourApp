@@ -100,7 +100,8 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
         {
             // match ratingsAverage column to value greater than or equal 4.5 
             $match: { ratingsAverage: { $gte: 4.5 } }
-        }, {
+        }, 
+        {
             // group tour datas, _id is compulsory which determines what is been grouped with
             $group: {
                 _id: { $toUpper: '$difficulty' },
@@ -111,7 +112,8 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
                 minPrice: { $min: '$price' },
                 maxPrice: { $max: '$price' }
             }
-        }, {
+        }, 
+        {
             // sort based on the average price grouped property by ASC (1)
             $sort: { avgPrice: 1 }
         } //  {
