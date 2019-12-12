@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
 
+process.on('uncaughtException', err => {
+    console.log('UNCAUGHT EXCEPTION');
+    console.log(err.name, err.message);
+    process.exit(1);
+});
+
+dotenv.config({ path: './config.env' });
 const app = require('./app');
 
 // before pushing to git, comment out this code below....
@@ -24,8 +30,11 @@ const server = app.listen(port, () => {
 });
 
 process.on('unhandledRejection', err => {
+    console.log('UNHANDLED REJECTION');
     console.log(err.name, err.message);
     server.close(() => {
         process.exit(1);
     });
 });
+
+console.log(x);
