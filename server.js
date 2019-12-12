@@ -35,6 +35,4 @@ process.on('unhandledRejection', err => {
     server.close(() => {
         process.exit(1);
     });
-});
-
-console.log(x);
+}); 
