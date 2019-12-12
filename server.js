@@ -13,12 +13,19 @@ mongoose.connect(process.env.DB_LOCAL, {
 }).then(() => {
     // console.log(con);
     console.log('Database connected...');
-}).catch(err => { console.log(err); });
+}); //if it ends with a catch, it will not step into the unhandledRejection event handler
 
 // console.log(app.get('env'));
 // console.log(process.env);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Listening from port ${port}...`);
-}); 
+});
+
+process.on('unhandledRejection', err => {
+    console.log(err.name, err.message);
+    server.close(() => {
+        process.exit(1);
+    });
+});
