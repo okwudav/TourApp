@@ -22,10 +22,21 @@ const userSchema = mongoose.Schema(
         },
         passwordConfirm: {
             type: String,
-            required: [true, 'Please confirm password.']
+            required: [true, 'Please confirm password.'],
+            validate: {
+                // THIS ONLY WORKDS ON CREATE & SAVE...
+                validator: function(val){
+                    return val === this.password;
+                },
+                message: 'Password mismatch.'
+            }
         }
     }
 );
+
+
+//encrypt/hash the password only on save, using the middle
+//if the password has not been modified, just call the next middle ware...
 
 const User = mongoose.model('User', userSchema);
 
