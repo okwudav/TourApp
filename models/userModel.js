@@ -43,7 +43,6 @@ userSchema.pre('save', async function (next) {
 
     // hash the pasword with cost 12
     this.password = await bcryptjs.hash(this.password, 12);
-
     // delete the passwordConfirm feild, as we only need it once
     this.passwordConfirm = undefined;
 
