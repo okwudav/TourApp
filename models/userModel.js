@@ -19,7 +19,8 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: [true, 'Password is required.'],
-            minlength: 8
+            minlength: 8,
+            select: false
         },
         passwordConfirm: {
             type: String,
@@ -36,9 +37,9 @@ const userSchema = mongoose.Schema(
 );
 
 
-//encrypt/hash the password only on save, using the middle
+//encrypt/hash the password only on save & updating, using the middle
 userSchema.pre('save', async function (next) {
-    //if the password has not been modified, just call the next middle ware...
+    //if the password has not been modified during updating, then inore
     if (!this.isModified('password')) return next();
 
     // hash the pasword with cost 12
@@ -49,6 +50,10 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+// Instance method, to be available on all document of it instance
+userSchema.methods.comparePassword = async function (loginPassword, dbPassword) {
+    return await bcryptjs.compare(loginPassword, dbPassword);
+}
 
 const User = mongoose.model('User', userSchema);
 
