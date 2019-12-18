@@ -38,6 +38,7 @@ exports.login = catchAsync(async (req, res, next) => {
     const user = await User.findOne({ email }).select('+password');
 
     //check if user not exist, using the user instance for it model method
+    //also call the comparePassword in the if statement, so it won't execute if the user is null
     if (!user || !(await user.comparePassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401));
     }
@@ -67,8 +68,16 @@ exports.protect = catchAsync(async (req, res, next) => {
     // jwt.sign(token, process.env.JWT_SECRET);
     const decodedToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-    console.log('decodedToken ', decodedToken);
+    // check if user still exist
+    const userData = await User.findById(decodedToken.id);
+    if (!userData) return next(new AppError('User belonging to this token no longer exist.', 401));
 
-    // call the next middle ware
+    // check if user changed the password after the token was issued
+    if (await userData.changedPasswordAfter(decodedToken.iat)) {
+        return next(new AppError('Please login again, password was changed.', 401));
+    }
+
+    // call the next middleware if all checks are passed
+    req.user = userData;
     next();
 })

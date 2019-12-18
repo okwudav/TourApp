@@ -32,7 +32,8 @@ const userSchema = mongoose.Schema(
                 },
                 message: 'Password mismatch.'
             }
-        }
+        },
+        passwordChangedAt: Date
     }
 );
 
@@ -50,9 +51,22 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-// Instance method, to be available on all document of it instance
+// Instance method, to be available on all instance of the document
 userSchema.methods.comparePassword = async function (loginPassword, dbPassword) {
     return await bcryptjs.compare(loginPassword, dbPassword);
+}
+
+userSchema.methods.changedPasswordAfter = async function (JWTTimestamp) {
+    // check if password has been updated before
+    if (this.passwordChangedAt) {
+        // convert passChangedAt to same as JWTTimestamp, also devide it by 1000 to get it in seconds and give it base number 10
+        const newPasswordChangedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+        // means the time that the token was issued is less than the changed timeStamp
+        return JWTTimestamp < newPasswordChangedAt; // 100 < 200 (means password was changed after token was issued)
+    }
+
+    // return false which means not changed
+    return false;
 }
 
 const User = mongoose.model('User', userSchema);
