@@ -1,14 +1,14 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
-const authController = require('./../controllers/authController');
+const authCon = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
+router.post('/signup', authCon.signup);
+router.post('/login', authCon.login);
 
 router.route('/')
-    .get(userController.getAllUsers)
+    .get(authCon.protect, userController.getAllUsers)
     .post(userController.createUser);
 
 router.route('/:id')

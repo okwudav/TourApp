@@ -51,7 +51,7 @@ class ApiFeatures {
             this.query.select(fields);
         }
         else {
-            // remove the returning '__v' property
+            // remove the returning '__v' property, and return all
             this.query.select('-__v');
         }
         // retuen this object

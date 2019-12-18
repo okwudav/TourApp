@@ -10,7 +10,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     //     .limitFields()
     //     .pagination();
 
-    const users = await User.find({});
+    const users = await User.find();
 
     // send response
     res.status(200).json({
