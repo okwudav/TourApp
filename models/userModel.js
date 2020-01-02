@@ -42,10 +42,21 @@ const userSchema = mongoose.Schema(
         },
         passwordChangedAt: Date,
         passwordResetToken: String,
-        passwordResetExpires: Date
+        passwordResetExpires: Date,
+        isActive: {
+            type: Boolean,
+            default: true,
+            select: false
+        }
     }
 );
 
+//every query that starts with find, always excempts doc which is not active
+userSchema.pre(/^find/, function (next) {
+    //this points to the current query
+    this.find({ isActive: { $ne: false } });
+    next();
+});
 
 //encrypt/hash the password only on save & updating, using the middle
 userSchema.pre('save', async function (next) {
