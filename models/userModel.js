@@ -51,7 +51,7 @@ const userSchema = mongoose.Schema(
     }
 );
 
-//every query that starts with find, always excempts doc which is not active
+//always excempts doc which is not active
 userSchema.pre(/^find/, function (next) {
     //this points to the current query
     this.find({ isActive: { $ne: false } });
