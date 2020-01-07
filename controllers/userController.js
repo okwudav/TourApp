@@ -6,9 +6,9 @@ const filteredObject = (object, ...allowedFields) => {
     const newObj = {};
 
     //get the field name of each object, and loop through them
-    Object.keys(object).forEach(el => {
+    Object.keys(object).forEach(_data => {
         // if the allowedFields array includes any pf the element, then add to the new object
-        if (allowedFields.includes(el)) newObj[el] = object[el];
+        if (allowedFields.includes(_data)) newObj[_data] = object[_data];
     });
 
     return newObj;

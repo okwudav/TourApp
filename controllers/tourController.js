@@ -21,6 +21,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
         .limitFields()
         .pagination();
 
+    // populate the guides column of the users in each tour
     const tours = await features.query;
 
     // send response
@@ -35,6 +36,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 })
 
 exports.getTour = catchAsync(async (req, res, next) => {
+    // populate the guides column of the users in each tour
     const tour = await Tour.findById(req.params.id);
     // const tour = await Tour.findOne({ _id: req.params.id });
 

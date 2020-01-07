@@ -33,6 +33,9 @@ const createAndSendToken = (user, statusCode, res) => {
     // send the token through cookies
     res.cookie('jwt', token, cookieOptions);
 
+    // remove the user password field on return
+    user.password = undefined;
+
     // resp
     return res.status(statusCode).json({
         status: 'success',
@@ -46,9 +49,6 @@ const createAndSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
     // create the new user
     const createdUser = await User.create(req.body);
-
-    // remove the user password field on return
-    createdUser.password = undefined;
 
     createAndSendToken(createdUser, 201, res);
 })

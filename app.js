@@ -10,6 +10,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRoute = require('./routes/tourRoute');
 const userRoute = require('./routes/userRoute');
+const reviewRoute = require('./routes/reviewRoute');
 
 const app = express();
 
@@ -25,7 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // help us prevent denial of service and also brute force attacks, limiting request
 const limiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1HOUR
+    windowMs: 60 * 60 * 1000, // win Mili Sec '1HOUR'
     max: 100, // limit each IP to 100 requests per windowMs (1HR)
     message: 'Too many request from this IP, please try again in an hour.'
 });
@@ -40,7 +41,7 @@ app.use(mongoSanitize()); // should be done under the body parser...
 // Data sanitization against Cross Site Scripting Attacks (XSS)
 app.use(xss());
 
-// protect against HTTP Parameter Pollution attacks
+// protect against HTTP Parameter Pollution attacks. Make sure the body is parsed beforehand.
 app.use(hpp({
     // set allowed parameters that can be allowed muiltiple times
     whitelist: ['duration', 'ratingsQuantity', 'ratingsAverage', 'maxGroupSize', 'difficulty', 'price']
@@ -58,6 +59,7 @@ app.use((req, res, next) => {
 // ROUTES
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
+app.use('/api/v1/reviews', reviewRoute);
 
 // MIDDLEWARE to check ALL(*) routes that wr not executes above b4 reaching here
 app.all('*', (req, res, next) => {

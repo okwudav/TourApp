@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
+// const User = require('./userModel');
 
 const tourSchema = mongoose.Schema(
     {
@@ -105,6 +106,7 @@ const tourSchema = mongoose.Schema(
         ],
         guides: [
             {
+                // use a child referencing, as this holds an array of the user Ids, by passing only the Ids of the users in the guides array..
                 type: mongoose.Schema.ObjectId,
                 ref: 'User'
             }
@@ -137,9 +139,15 @@ tourSchema.virtual('nameSlugged').get(function () {
 //     next();
 // });
 
-// AFTER SAVING A DOCUMENT, doc returns the current saved document
-// tourSchema.post('save', function (doc, next) {
-//     console.log(doc);
+// SAVING A DOCUMENT runs befroe saving a doc
+
+// embending the user data into the tour table as guides, JUST FOR TEST THO *incase*
+// tourSchema.pre('save', async function (next) {
+//     // so loop through each data that was passed in the guid, an get each user based on that Id, which returns it as a Promise
+//     const guidePromises = this.guides.map(async id => await User.findOne({ id }));
+//     // to get each data in the query, use promise.all, and store the users in the guides
+//     this.guides = await Promise.all(guidePromises);
+
 //     next();
 // });
 
@@ -151,17 +159,25 @@ tourSchema.pre(/^find/, function (next) {
     next();
 });
 
-tourSchema.post(/^find/, function (doc, next) {
-    console.log(`Query took ${Date.now() - this.start} milliseconds`);
-    // console.log(doc);
+tourSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'guides',
+        select: '-__v -passwordChangedAt'
+    });
+
     next();
 });
 
-// AGGREGATE MIDDLEWARE
 tourSchema.pre('aggregate', function (next) {
     // in the aggregate pipeline, add a match func
     this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
     // console.log(this.pipeline());
+    next();
+});
+
+tourSchema.post(/^find/, function (doc, next) {
+    console.log(`Query took ${Date.now() - this.start} milliseconds`);
+    // console.log(doc);
     next();
 });
 
