@@ -2,10 +2,11 @@ const express = require('express');
 const reviewCon = require('./../controllers/reviewController');
 const authCon = require('./../controllers/authController');
 
-const routes = express.Router();
+// use merge params to have access params in tour routes
+const routes = express.Router({ mergeParams: true });
 
-routes.route('/get-reviews-by-tour/:tourId')
-    .get(reviewCon.getReviewsByTour);
+// routes.route('/get-reviews-by-tour/:tourId')
+//     .get(reviewCon.getReviewsByTour);
 
 routes.route('/')
     .get(reviewCon.getAllReviews)

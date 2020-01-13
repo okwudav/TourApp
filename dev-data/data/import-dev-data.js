@@ -2,6 +2,8 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Tour = require('./../../models/tourModel');
+const Review = require('./../../models/reviewModel');
+
 dotenv.config({ path: './../../config.env' });
 
 mongoose.connect(process.env.DB_LOCAL, {

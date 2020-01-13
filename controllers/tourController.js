@@ -37,7 +37,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
     // populate the guides column of the users in each tour
-    const tour = await Tour.findById(req.params.id);
+    const tour = await Tour.findById(req.params.id).populate('reviews');
     // const tour = await Tour.findOne({ _id: req.params.id });
 
     if (!tour) {

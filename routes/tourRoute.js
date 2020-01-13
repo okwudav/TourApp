@@ -1,11 +1,16 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
 const authCon = require('./../controllers/authController');
+const reviewRoute = require('./../routes/reviewRoute');
 
 const router = express.Router();
 
 // confirm ID in middleware before hitting the router
 // router.param('id', checkID);
+
+// NESTED ROUTES (Using merge params) (make sure reviews, is also an existing endpoint)
+// POST: tour/23ffbe/reviews // GET: tour/23ffbe/reviews // etc
+router.use('/:tourId/reviews', reviewRoute);
 
 router.route('/get-top-5-tours')
     .get(tourController.aliasTopTours, tourController.getAllTours);

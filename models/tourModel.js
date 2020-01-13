@@ -132,6 +132,12 @@ tourSchema.virtual('nameSlugged').get(function () {
     return slugify(this.name, { lower: true });
 });
 
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'
+});
+
 // DOCUMENT MIDDLE WARE runs before a save or create occurs in the database
 // also known as Pre Save Hooks
 // tourSchema.pre('save', function (next) {
