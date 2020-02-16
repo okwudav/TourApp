@@ -6,17 +6,22 @@ const router = express.Router();
 
 router.post('/signup', authCon.signup);
 router.post('/login', authCon.login);
-
 router.post('/forgot-password', authCon.forgotPassword);
-
 router.patch('/reset-password/:token', authCon.resetPassword);
-router.patch('/update-my-password', authCon.protect, authCon.updatePassword);
-router.patch('/update-my-data', authCon.protect, userCon.updateMyData);
 
-router.delete('/delete-my-data', authCon.protect, userCon.deleteMyData);
+// protect all routes/endpoints after this middleware
+router.use(authCon.protect);
+
+router.get('/me', userCon.setMyData, userCon.getUser);
+router.patch('/update-my-password', authCon.updatePassword);
+router.patch('/update-my-data', userCon.updateMyData);
+router.delete('/delete-my-data', userCon.deleteMyData);
+
+// restrict all routes/endpoints after this middleware to admins only
+router.use(authCon.restrictTo('admin'));
 
 router.route('/')
-    .get(authCon.protect, userCon.getAllUsers)
+    .get(userCon.getAllUsers)
     .post(userCon.createUser);
 
 router.route('/:id')

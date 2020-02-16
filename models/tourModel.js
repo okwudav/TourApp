@@ -14,6 +14,7 @@ const tourSchema = mongoose.Schema(
             minlength: [10, 'A tour name must have more or equal then 10 characters'],
             // validate: [validator.isAlpha, 'Tour name must only contain characters']
         },
+        slug: String,
         duration: {
             type: Number,
             required: [true, 'A tour must have a duration.']
@@ -34,8 +35,9 @@ const tourSchema = mongoose.Schema(
             type: Number,
             default: 4.5,
             min: [1, 'Rating must be above 1.0'],
-            max: [5, 'Rating must be below 5.0']
-            // set: val => Math.round(val * 10) / 10 // 4.666666, 46.6666, 47, 4.7
+            max: [5, 'Rating must be below 5.0'],
+            // get the set value and round it up, Math.round, rounds a figure to Int, below is a trick
+            set: val => Math.round(val * 10) / 10 // 4.666666, 46.6666, 47, 4.7
         },
         ratingsQuantity: {
             type: Number,
@@ -121,15 +123,15 @@ const tourSchema = mongoose.Schema(
     }
 );
 
+// craeted an index  (1 for asc, -1 for desc)
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 // VIRTUAL PROPERTY
 tourSchema.virtual('durationWeeks').get(function () {
     // return the duration per week
     return this.duration / 7;
-});
-
-tourSchema.virtual('nameSlugged').get(function () {
-    // return slugged name property
-    return slugify(this.name, { lower: true });
 });
 
 tourSchema.virtual('reviews', {
@@ -140,10 +142,10 @@ tourSchema.virtual('reviews', {
 
 // DOCUMENT MIDDLE WARE runs before a save or create occurs in the database
 // also known as Pre Save Hooks
-// tourSchema.pre('save', function (next) {
-//     this.slug = slugify(this.name, { lower: true });
-//     next();
-// });
+tourSchema.pre('save', function (next) {
+    this.slug = slugify(this.name, { lower: true });
+    next();
+});
 
 // SAVING A DOCUMENT runs befroe saving a doc
 
@@ -186,7 +188,6 @@ tourSchema.post(/^find/, function (doc, next) {
     // console.log(doc);
     next();
 });
-
 
 const Tour = mongoose.model('Tour', tourSchema);
 

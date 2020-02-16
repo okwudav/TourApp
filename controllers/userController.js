@@ -1,6 +1,7 @@
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const handlerFactory = require('./handlerFactory');
 
 const filteredObject = (object, ...allowedFields) => {
     const newObj = {};
@@ -14,45 +15,12 @@ const filteredObject = (object, ...allowedFields) => {
     return newObj;
 }
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-    // pass the query and the queryString
-    // const features = new ApiFeatures(User.find(), req.query)
-    //     .filter()
-    //     .sort()
-    //     .limitFields()
-    //     .pagination();
 
-    const users = await User.find();
-
-    // send response
-    res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        result: users.length,
-        data: {
-            users
-        }
-    });
-})
-
-exports.getUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        data: 'This route is not yet defined...'
-    });
-}
 
 exports.createUser = (req, res) => {
     res.status(500).json({
         status: 'error',
-        data: 'This route is not yet defined...'
-    });
-}
-
-exports.updateUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        data: 'This route is not yet defined...'
+        data: 'This route is not yet defined, kindly use sign up instead!!!'
     });
 }
 
@@ -89,9 +57,18 @@ exports.deleteMyData = catchAsync(async (req, res, next) => {
     });
 })
 
-exports.deleteUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        data: 'This route is not yet defined...'
-    });
-}
+exports.setMyData = catchAsync(async (req, res, next) => {
+    // set set the id to the params, as this func will be a middle ware to getOne
+    req.params.id = req.user.id;
+
+    next();
+})
+
+exports.getAllUsers = handlerFactory.getAll(User);
+
+exports.getUser = handlerFactory.getOne(User);
+
+// DO NOT UPDATE USER PASWORD WITH THIS
+exports.updateUser = handlerFactory.updateOne(User);
+
+exports.deleteUser = handlerFactory.deleteOne(User);

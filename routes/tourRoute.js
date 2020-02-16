@@ -19,15 +19,15 @@ router.route('/tour-stats')
     .get(tourController.getTourStats);
 
 router.route('/monthly-plan/:year')
-    .get(tourController.getMonthlyPlan);
+    .get(authCon.protect, authCon.restrictTo('admin', 'lead-guide', 'guide'), tourController.getMonthlyPlan);
 
 router.route('/')
-    .get(authCon.protect, tourController.getAllTours)
-    .post(tourController.createTour);
+    .get(tourController.getAllTours)
+    .post(authCon.protect, authCon.restrictTo('admin', 'lead-guide'), tourController.createTour);
 
 router.route('/:id')
     .get(tourController.getTour)
-    .patch(tourController.updateTour)
+    .patch(authCon.protect, authCon.restrictTo('admin', 'lead-guide'), tourController.updateTour)
     .delete(authCon.protect, authCon.restrictTo('admin', 'lead-guide'), tourController.deleteTour);
 
 module.exports = router;
