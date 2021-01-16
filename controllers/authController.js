@@ -70,7 +70,7 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('Incorrect email or password', 401));
     }
 
-    // genrate token
+    // generate token
     createAndSendToken(user, 201, res);
 })
 
@@ -86,7 +86,7 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError('Please login to get access.', 401));
     }
 
-    //verify the signToken, "buh use the build in promisify util, so we cam use await since the method only returns a calback, so we dont break out structure"
+    //verify the signToken, "buh use the build in promisify util, so we cam use await since the method only returns a callback, so we dont break out structure"
     // jwt.sign(token, process.env.JWT_SECRET);
     const decodedToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 

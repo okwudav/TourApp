@@ -115,7 +115,7 @@ const tourSchema = mongoose.Schema(
         ]
     },
 
-    // pass shema options
+    // pass schema options
     {
         // when ever it return a JSON, also pass along the virtual properties
         toJSON: { virtuals: true },
@@ -123,7 +123,7 @@ const tourSchema = mongoose.Schema(
     }
 );
 
-// craeted an index  (1 for asc, -1 for desc)
+// created an index  (1 for asc, -1 for desc)
 // tourSchema.index({ price: 1 });
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
@@ -149,7 +149,7 @@ tourSchema.pre('save', function (next) {
 
 // SAVING A DOCUMENT runs befroe saving a doc
 
-// embending the user data into the tour table as guides, JUST FOR TEST THO *incase*
+// embedding the user data into the tour table as guides, JUST FOR TEST THO *incase*
 // tourSchema.pre('save', async function (next) {
 //     // so loop through each data that was passed in the guid, an get each user based on that Id, which returns it as a Promise
 //     const guidePromises = this.guides.map(async id => await User.findOne({ id }));

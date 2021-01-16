@@ -95,18 +95,18 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
 reviewSchema.post('save', function () {
     // this points to current review, use the const to excute the static method
     this.constructor.calcAverageRatings(this.tour);
-})
+});
 
 // also before updating or deleting a review, get the review
 reviewSchema.pre(/^findByIdAnd/, async function (next) {
     const _review = await this.findOne();
     next();
-})
+});
 
 // so after updating the review, calc the avg again for the tour 
 reviewSchema.post(/^findByIdAnd/, async function () {
     this._review.constructor.calcAverageRatings(this._review.tour);
-})
+});
 
 
 const Review = mongoose.model('Review', reviewSchema);
